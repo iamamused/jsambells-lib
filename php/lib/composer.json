@@ -1,0 +1,21 @@
+{
+	"repositories": [
+	   {
+		 "type": "vcs",
+		 "url": "https://github.com/iamamused/toggl-php-wrapper"
+	   }
+	],
+	"minimum-stability": "stable",
+    "require": {
+        "gorkalaucirica/hipchat-v2-api-client": "~1.3",
+        "michelf/php-markdown": "~1.5",
+        "google/apiclient": "~1.1",
+        "tinyrocket/toggl": "*@dev",
+		"nepda/youtrack-client": "~1.0",
+		"symfony/yaml": "^2.7",
+		"phpoffice/phpexcel": "~1.8",
+		"rossedman/teamwork": "~1.0",
+		"phpoffice/phpword": "^0.12.1",
+		"parsecsv/php-parsecsv": "^0.4.5"
+    }
+}
