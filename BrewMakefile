@@ -1,0 +1,2 @@
+all:
+	cd share/jsambells-php/lib; php composer.phar update
