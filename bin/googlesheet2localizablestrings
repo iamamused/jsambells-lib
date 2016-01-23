@@ -114,7 +114,10 @@ try {
 			break;
 	}
 	
-	
+	putenv("LANG=en_US.UTF-8");
+	putenv("LANGUAGE=en_US.UTF-8");
+	putenv("LC_ALL=en_US.UTF-8");
+
 	`babelish $type --keys-column=0 --comments-column=1 --filename=$filePath --langs=$validLanguages --output-dir=$sourceRoot`;
 	
 	
