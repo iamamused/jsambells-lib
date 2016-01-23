@@ -62,7 +62,7 @@ In xcode add a run script build phase to the target (drage it to the top of the 
 
 For the script enter:
 
-	googlesheet2localizablestrings ios ${SRCROOT}/{$PROJECT_NAME} "google-id-copied-above"
+	googlesheet2localizablestrings ios "${SRCROOT}/${PROJECT_NAME}" "google-id-copied-above"
 
 build and enjoy!
 
