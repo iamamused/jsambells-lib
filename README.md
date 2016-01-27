@@ -56,18 +56,31 @@ Column headers with valid language codes will be auto identified.
 3. Copy any of the existing strings into the sheet (you can use `babelish` installed earlier [to convert your existing string/xml into CSV format](https://github.com/netbe/Babelish/wiki/How-to-Use).)
 4. Copy the ID portion of the Google Sheet url for configuration in the next step.
 
+Now configure your project as outlined below when and when you need a new string, update the google sheet then build you project and it will appear as necessary.
+
 #### Configure for iOS
 
 In xcode add a run script build phase to the target (drage it to the top of the list)
 
 For the script enter:
 
-	googlesheet2localizablestrings ios "${SRCROOT}/${PROJECT_NAME}" "google-id-copied-above"
+	if [ "$CONFIGURATION" == "Debug" ]; then
+		echo "Generating localization files"
+		googlesheet2localizablestrings ios "${SRCROOT}/${PROJECT_NAME}" "google-id-copied-above"
+	fi
 
-build and enjoy!
+#### Configure for android
 
-Now when you need a new string, update the google sheet then build you project and it will appear as necessary.
+In Android Studio, add the following Gradle task in your app.gradle file:
 
+	android {
+		task googlesheet2localizablestrings(type: Exec, description: 'googlesheet2localizablestrings') {
+			println "Generating localization files"
+			environment 'PATH', '$PATH:/usr/bin/:/usr/local/bin'
+			commandLine '/usr/local/bin/googlesheet2localizablestrings', 'android', 'src/main/res', 'google-id-copied-above'
+		}
+		preBuild.dependsOn googlesheet2localizablestrings
+	}
 
-
+# build and enjoy!
 

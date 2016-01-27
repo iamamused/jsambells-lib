@@ -1,35 +1,40 @@
 #!/usr/bin/php
 <?php
 
-date_default_timezone_set($timezone = 'America/Toronto');
-
-//print_r($_SERVER);
-
 if (php_sapi_name() != 'cli') {
   throw new Exception("This application must be run on the command line./n");
 }
 
+// Check input
 if (count($argv) != 4) {
 	die("Usage: googlesheet2localizablestrings format /path/to/source/root googledrivefileid
 format: android | json | php | ios
 	");
 }
-
-$credentials = $_SERVER['HOME'].'/.libjsambells/googlesheet2localizablestrings.credentials.json';
-
-if (!file_exists($credentials)) {
-	die("Missing: $credentials\n");
-}
-
-putenv("GOOGLE_APPLICATION_CREDENTIALS=".$credentials);
-
 define('OUTPUT_TYPE',rtrim($argv[1],'/'));
 define('SOURCE_ROOT',rtrim($argv[2],'/'));
 define('FILE_ID',$argv[3]);
 
-define('LIBRARY_INCLUDE_PATH','/usr/local/share/jsambells-php/lib');
+$credentials = $_SERVER['HOME'].'/.libjsambells/googlesheet2localizablestrings.credentials.json';
+if (!file_exists($credentials)) {
+	die("Missing: $credentials, see https://github.com/iamamused/libjsambells\n");
+}
+putenv("GOOGLE_APPLICATION_CREDENTIALS=".$credentials);
+
+
+// Setup libraries
+
+if (file_exists('../share/jsambells-php/lib')) {
+	define('LIBRARY_INCLUDE_PATH', realpath('../share/jsambells-php/lib'));
+} else {
+	define('LIBRARY_INCLUDE_PATH','/usr/local/share/jsambells-php/lib');
+}
 
 require_once LIBRARY_INCLUDE_PATH.'/vendor/autoload.php';
+require_once LIBRARY_INCLUDE_PATH.'/headers/common.php';
+
+
+// Start business logic
 
 $client = new Google_Client();
 
@@ -64,6 +69,14 @@ try {
 
 	$csvString = downloadCSV($service,$file);
 	
+	switch (OUTPUT_TYPE) {
+		case 'android':
+			$csvString = str_replace('&','&amp;',$csvString);
+		break;
+		default:
+			break;
+	}
+	
 	$csv = new parseCSV();
 	$csv->auto($csvString);
 	
@@ -75,6 +88,7 @@ try {
 	$useBase = file_exists(SOURCE_ROOT.'/Base.lproj');
 	$hasBase = false;
 	$validLanguages = [];
+	$firstLanguage = false;
 	foreach ($csv->titles as $code) {
 		if (in_array($code,$validLocaleCodes)) {
 			$in = $code;
@@ -82,6 +96,9 @@ try {
 			if ($useBase && !$hasBase) {
 				$hasBase = true;
 				$out = 'Base';
+			}
+			if (!$firstLanguage) {
+				$firstLanguage = $out;
 			}
 			$validLanguages[] = "$in:$out";
 		}
@@ -121,8 +138,21 @@ try {
 	`babelish $type --keys-column=0 --comments-column=1 --filename=$filePath --langs=$validLanguages --output-dir=$sourceRoot`;
 	
 	
-	`osascript -e 'display notification "Created Localized Strings for [Project Name]"'`;
+	switch (OUTPUT_TYPE) {
+			case 'android':
+				// move the first language into "values" without the suffix.
+				rename($sourceRoot.'/values-'.$firstLanguage.'/strings.xml', $sourceRoot.'/values/strings.xml');
+			break;
+			default:
+				break;
+		}
 
+	
+	if (`which osascript`) {
+		$outputType = OUTPUT_TYPE;
+		`osascript -e 'display notification "Created $outputType Localized Strings for $sourceRoot"'`;
+	}
+	
 	
 } catch (Exception $e) { 
 	echo "\nAn error occurred: ", $e->getMessage(); 
