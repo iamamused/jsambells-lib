@@ -71,6 +71,7 @@ try {
 	switch (OUTPUT_TYPE) {
 		case 'android':
 			$csvString = str_replace('&','&amp;',$csvString);
+			$csvString = str_replace('\'','\\\'',$csvString);
 		break;
 		default:
 			break;
@@ -78,6 +79,7 @@ try {
 	
 	$csv = new parseCSV();
 	$csv->auto($csvString);
+
 	
 	// remove the instructions line.
 	array_shift($csv->data);
@@ -196,7 +198,6 @@ try {
 			case 'android':
 				// move the first language into "values" without the suffix.
 				rename($sourceRoot.'/values-'.$firstLanguage.'/strings.xml', $sourceRoot.'/values/strings.xml');
-				echo file_get_contents($sourceRoot.'/values/strings.xml');
 			break;
 			default:
 				break;
