@@ -56,7 +56,6 @@ if ($client->getAuth()->isAccessTokenExpired()) {
     $client->getAuth()->refreshTokenWithAssertion();
 }
 
-
 $client->setApplicationName("SpeakFeel Jeff's Automation Package");
 
 // UI Copy Deck Template: com.example.app:target
@@ -88,8 +87,14 @@ try {
 	$useBase = file_exists(SOURCE_ROOT.'/Base.lproj');
 	$hasBase = false;
 	$validLanguages = [];
+	$validLanguageColumns = [];
 	$firstLanguage = false;
-	foreach ($csv->titles as $code) {
+	$keyColumn = -1;
+	$formatsColumn = -1;
+	$commentsColumn = -1;
+	
+	for( $i=0 ; $i < count($csv->titles) ; $i++) {
+		$code = trim($csv->titles[$i]);
 		if (in_array($code,$validLocaleCodes)) {
 			$in = $code;
 			$out = $code;
@@ -101,15 +106,64 @@ try {
 				$firstLanguage = $out;
 			}
 			$validLanguages[] = "$in:$out";
+			$validLanguageColumns[] = $csv->titles[$i];
+		} else {
+			switch (strtolower($code)) {
+				case 'key':
+					$keyColumn = $i;
+				break;
+				case 'formats':
+					$formatsColumn = $i;
+				break;
+				case 'description':
+					$commentsColumn = $i;
+				break;
+			}
 		}
 	}
+	
+	// apply formatting
+	for( $i=0 ; $i < count($csv->data) ; $i++) {
+		$row = array_change_key_case ($csv->data[$i] ,CASE_LOWER);
+		
+		$formats = trim(@$row['formats']);
+		if (!$formats) continue;
+		
+		$formatPairs = explode(';', $formats);
+		foreach($formatPairs as $pair) {
+			list($find,$replace) = explode('=',$pair);
+			$find = trim($find);
+			$replace = explode('|',$replace);
+			switch (OUTPUT_TYPE) {
+				case 'android':
+					$replace = $replace[1];
+				break;
+				case 'php':
+					$replace = $replace[3];
+				break;
+				case 'json':
+					$replace = $replace[2];
+				break;
+				default:
+				case 'ios':
+					$replace = $replace[0];
+					break;
+			}
+			foreach($validLanguageColumns as $langCol) {
+				$row[$langCol] = str_replace($find,$replace,$row[$langCol]); 
+			}
+		}
+		$csv->data[$i] = $row;
+	}
+	
+	
 	$validLanguages = join(',',$validLanguages);	
 	$filePath = '/tmp/googlesheet2localozablestrings.working';
 	$file = fopen($filePath,"w");
-	  fputcsv($file,$csv->titles);
+	fputcsv($file,$csv->titles);
 	foreach ($csv->data as $row) {
 	  fputcsv($file,$row);
-	 }
+	}
 	fclose($file);
 	
 	$sourceRoot = SOURCE_ROOT;
@@ -135,13 +189,14 @@ try {
 	putenv("LANGUAGE=en_US.UTF-8");
 	putenv("LC_ALL=en_US.UTF-8");
 
-	`babelish $type --keys-column=0 --comments-column=1 --filename=$filePath --langs=$validLanguages --output-dir=$sourceRoot`;
+	`babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir=$sourceRoot`;
 	
 	
 	switch (OUTPUT_TYPE) {
 			case 'android':
 				// move the first language into "values" without the suffix.
 				rename($sourceRoot.'/values-'.$firstLanguage.'/strings.xml', $sourceRoot.'/values/strings.xml');
+				echo file_get_contents($sourceRoot.'/values/strings.xml');
 			break;
 			default:
 				break;

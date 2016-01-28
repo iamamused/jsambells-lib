@@ -36,15 +36,15 @@ It assumes that the google drive file is in the format:
 
 for example:
 
-
-	| keys   | Comment | Max Size | en                | fr                 |
-	------------------------------------------------------------------------
-	| my_key | Example | 20       | My Example String | Mon exemple cordes |
-
+| Keys         | Formats                                  | Description  | Max Size     | en                              | fr                              |
+| Instructions | Instructions                             | Instructions | Instructions | Instructions                    | Instructions                    |
+| ------------ |----------------------------------------- | ------------ | ------------ | ------------------------------- | ------------------------------- |
+| my_key       | [product]=%@\|%1$s;[value]=%.02\|%1$.02f | product cost | 40           | Product [product] costs [value] | Produit [product] coûte [value] |
 
 Column headers with valid language codes will be auto identified. 
 
-**For ios, if the Base.lproj exists, the first language will be considered Base.**
+**For ios, if the Base.lproj exists, the first language will used for the Localizable.strings in the Base.lproj**
+**For android, the first language will be used as the strings.xml in the values folder.**
 	
 ### Setup
 
