@@ -4,9 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5dafa405690b774422a2aad1cb3eb0c7",
-    "content-hash": "7a8798981caf62f980eb2566f3b444cf",
+    "hash": "6984568d053e7c0eb3bd384119203361",
+    "content-hash": "5e297c59c819c159c149d6483c320d95",
     "packages": [
+        {
+            "name": "asimlqt/php-google-spreadsheet-client",
+            "version": "2.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/asimlqt/php-google-spreadsheet-client.git",
+                "reference": "05527b328b2cf08c4b1992bdb531116305c1b711"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/asimlqt/php-google-spreadsheet-client/zipball/05527b328b2cf08c4b1992bdb531116305c1b711",
+                "reference": "05527b328b2cf08c4b1992bdb531116305c1b711",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\": "src/Google"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Asim Liaquat",
+                    "email": "asimlqt22@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Martin Czygan",
+                    "email": "martin.czygan@gmail.com",
+                    "homepage": "http://twitter.com/cvvfj",
+                    "role": "Packager"
+                }
+            ],
+            "description": "Google Spreadsheet PHP Client",
+            "homepage": "https://github.com/asimlqt/php-google-spreadsheet-client",
+            "keywords": [
+                "google",
+                "spreadsheet"
+            ],
+            "time": "2015-12-13 15:13:17"
+        },
         {
             "name": "google/apiclient",
             "version": "1.1.6",

@@ -16,6 +16,7 @@
 		"phpoffice/phpexcel": "~1.8",
 		"rossedman/teamwork": "~1.0",
 		"phpoffice/phpword": "^0.12.1",
-		"parsecsv/php-parsecsv": "^0.4.5"
+		"parsecsv/php-parsecsv": "^0.4.5",
+		"asimlqt/php-google-spreadsheet-client": "^2.3"
     }
 }
