@@ -221,7 +221,7 @@ try {
 
 @import Foundation;
 
-#define GSLocalizedString(key, comment) \
+#define GSLocalizedString(key) \
 	    NSLocalizedString((key),nil)
 	
 ';
