@@ -198,7 +198,7 @@ try {
 	putenv("LANGUAGE=en_US.UTF-8");
 	putenv("LC_ALL=en_US.UTF-8");
 
-	`babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir=$sourceRoot`;
+	`babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir="$sourceRoot"`;
 	
 	
 	switch (OUTPUT_TYPE) {
