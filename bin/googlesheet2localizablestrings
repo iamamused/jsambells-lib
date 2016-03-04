@@ -72,14 +72,19 @@ try {
 		die('Could not download CSV');
 	}
 	
+	/*
 	switch (OUTPUT_TYPE) {
 		case 'android':
 			$csvString = str_replace('&','&amp;',$csvString);
 			$csvString = str_replace('\'','\\\'',$csvString);
+			$csvString = str_replace('\'','\\\'',$csvString);
+		break;
+		case 'ios':
 		break;
 		default:
 			break;
 	}
+	*/
 	
 	$csv = new parseCSV();
 	$csv->auto($csvString);
@@ -128,15 +133,53 @@ try {
 		}
 	}
 	
+	
 	// apply formatting and gather keys
 	$allKeys = [];
 	for( $i=0 ; $i < count($csv->data) ; $i++) {
 		$row = array_change_key_case ($csv->data[$i] ,CASE_LOWER);
+	
+		switch (@$row['parser']) {
+			case 'plain':
+			
+			break;
+			case 'html':
+			
+			break;
+			case 'markdown':
+			
+			break;
+			default:
+				break;
+		}
 		
-		$allKeys[] = $row['key'];
+		// Escape content only
+		foreach($validLanguageColumns as $langCol) {
+			switch (OUTPUT_TYPE) {
+				case 'android':
+					$row[$langCol] = str_replace('%','\\u0025',$row[$langCol]);
+					$row[$langCol] = str_replace('&','&amp;',$row[$langCol]);
+					$row[$langCol] = str_replace('\"','\\\'',$row[$langCol]);
+					$row[$langCol] = str_replace('\'','\\\'',$row[$langCol]);
+					if (@$row['parser'] == 'html' || (@!$row['parser'] && ($row[$langCol] && trim($row[$langCol][0]) == '<'))) {
+						$row[$langCol] = '<![CDATA['.$row[$langCol].']]>';
+					}
+				break;
+				case 'ios':
+					$row[$langCol] = str_replace('%','%%',$row[$langCol]);
+				break;
+				default:
+					break;
+			}
+			echo "{$row[$langCol]}\n";
+		}
+		$csv->data[$i] = $row;
+
 		
 		$formats = trim(@$row['formats']);
 		if (!$formats) continue;
+
+		$allKeys[] = $row['key'];
 		
 		$formatPairs = explode(';', $formats);
 		foreach($formatPairs as $pair) {
@@ -204,6 +247,7 @@ try {
 	switch (OUTPUT_TYPE) {
 			case 'android':
 				// move the first language into "values" without the suffix.
+				@mkdir($sourceRoot.'/values');
 				rename($sourceRoot.'/values-'.$firstLanguage.'/strings.xml', $sourceRoot.'/values/strings.xml');
 			break;
 			case 'ios':
@@ -238,10 +282,13 @@ try {
 #import "GSLocalizationConstants.h"
 
 ';
+//var_dump($allKeys);
+//die();
 				// generate constants
 				foreach($allKeys as $key) {
 					// .h FOUNDATION_EXPORT NSString *const kUserProfileCategories;
 					// .m NSString *const kUserProfileCategories = @"kUserProfileCategories";
+					
 					$camel = ucfirst(Google_Utils::camelCase($key));
 					$hFile .= "FOUNDATION_EXPORT NSString *const kLoc{$camel};\n";
 					$mFile .= "NSString *const kLoc{$camel} = @\"$key\";\n";
