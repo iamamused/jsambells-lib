@@ -1,7 +1,9 @@
 #!/usr/bin/php
 <?php
 
-if (php_sapi_name() != 'cli') {
+echo "php_sapi_name: ".php_sapi_name()."\n";
+
+if (!in_array(php_sapi_name(), ['cli','phpdbg']) ) {
   throw new Exception("This application must be run on the command line./n");
 }
 
@@ -91,7 +93,7 @@ try {
 	
           while (list($k,$prefix) = each($prefixes)) {    
 
-            var_dump('processing',$prefix);
+            echo "Processing Prefix: '$prefix'\n";
             
             $csv = new parseCSV();
             $csv->auto($csvString);
@@ -140,7 +142,7 @@ try {
 	// added source here to allow for rvm usage
 ///bin/bash --login; source ~/.bashrc; rvm 2.3.0-p0 exec
     $command = " babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir=\"$sourceRoot\"$output_basename";
-	var_dump($command);
+	echo "Command: $ $command\n";
         `$command`;
 	
 	
@@ -270,16 +272,26 @@ function reformatCSV($csv,$prefix=false,&$prefixes=null) {
         
             // grab the key and check if it's in another file.
             if (stristr($row['key'],':') !== false) {
-                list($rowPrefix,$rowKey) = explode(':',$row['key']);
-                if ($rowPrefix != $prefix) {
-                    $csv->data[$i] = null;
-                    if (!in_array($rowPrefix, $prefixes)) {
-                        $prefixes[] = $rowPrefix; 
-                    }
-                    continue;
-                } else {
-                    $row['key'] = $rowKey;
-                }
+                switch (OUTPUT_TYPE) {
+		default:
+			$rowKey = substr($row['key'], strpos($row['key'], ':')+1); 
+			$row['key'] = $rowKey;
+		break;
+		case 'ios':
+			list($rowPrefix,$rowKey) = explode(':',$row['key']);
+			if ($rowPrefix != $prefix) {
+				$csv->data[$i] = null;
+				if (!in_array($rowPrefix, $prefixes)) {
+					$prefixes[] = $rowPrefix; 
+				}
+				continue;
+			} else {
+				$row['key'] = $rowKey;
+			}
+			break;
+	}
+
+
             } else if ($prefix) {
                 $csv->data[$i] = null;
                 continue;
