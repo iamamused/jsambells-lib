@@ -86,141 +86,34 @@ try {
 	}
 	*/
 	
-	$csv = new parseCSV();
-	$csv->auto($csvString);
 
+          $prefixes = [false];
 	
-	// remove the instructions line.
-	array_shift($csv->data);
-	
-	// assumption columns matching language codes as headers are valid.
-	$validLocaleCodes = array_keys(validLocales());
-	$useBase = file_exists(SOURCE_ROOT.'/Base.lproj');
-	$hasBase = false;
-	$validLanguages = [];
-	$validLanguageColumns = [];
-	$firstLanguage = false;
-	$keyColumn = -1;
-	$formatsColumn = -1;
-	$commentsColumn = -1;
-	
-	for( $i=0 ; $i < count($csv->titles) ; $i++) {
-		$code = trim($csv->titles[$i]);
-		if (in_array($code,$validLocaleCodes)) {
-			$in = $code;
-			$out = $code;
-			if ($useBase && !$hasBase) {
-				$hasBase = true;
-				$out = 'Base';
-			}
-			if (!$firstLanguage) {
-				$firstLanguage = $out;
-			}
-			$validLanguages[] = "$in:$out";
-			$validLanguageColumns[] = $csv->titles[$i];
-		} else {
-			switch (strtolower($code)) {
-				case 'key':
-					$keyColumn = $i;
-				break;
-				case 'formats':
-					$formatsColumn = $i;
-				break;
-				case 'description':
-					$commentsColumn = $i;
-				break;
-			}
-		}
-	}
-	
-	
-	// apply formatting and gather keys
-	$allKeys = [];
-	for( $i=0 ; $i < count($csv->data) ; $i++) {
-		$row = array_change_key_case ($csv->data[$i] ,CASE_LOWER);
-	
-		switch (@$row['parser']) {
-			case 'plain':
-			
-			break;
-			case 'html':
-			
-			break;
-			case 'markdown':
-			
-			break;
-			default:
-				break;
-		}
-		
-		// Escape content only
-		foreach($validLanguageColumns as $langCol) {
-			switch (OUTPUT_TYPE) {
-				case 'android':
-					$row[$langCol] = str_replace('%','\\u0025',$row[$langCol]);
-					$row[$langCol] = str_replace('&','&amp;',$row[$langCol]);
-					$row[$langCol] = str_replace('\"','\\\'',$row[$langCol]);
-					$row[$langCol] = str_replace('\'','\\\'',$row[$langCol]);
-					if (@$row['parser'] == 'html' || (@!$row['parser'] && ($row[$langCol] && trim($row[$langCol][0]) == '<'))) {
-						$row[$langCol] = '<![CDATA['.$row[$langCol].']]>';
-					}
-				break;
-				case 'ios':
-					$row[$langCol] = str_replace('%','%%',$row[$langCol]);
-				break;
-				default:
-					break;
-			}
-			echo "{$row[$langCol]}\n";
-		}
-		$csv->data[$i] = $row;
+          while (list($k,$prefix) = each($prefixes)) {    
 
-		
-		$formats = trim(@$row['formats']);
-		if (!$formats) continue;
-
-		$allKeys[] = $row['key'];
-		
-		$formatPairs = explode(';', $formats);
-		foreach($formatPairs as $pair) {
-			list($find,$replace) = explode('=',$pair);
-			$find = trim($find);
-			$replace = explode('|',$replace);
-			switch (OUTPUT_TYPE) {
-				case 'android':
-					$replace = $replace[1];
-				break;
-				case 'php':
-					$replace = $replace[3];
-				break;
-				case 'json':
-					$replace = $replace[2];
-				break;
-				default:
-				case 'ios':
-					$replace = $replace[0];
-					break;
-			}
-			foreach($validLanguageColumns as $langCol) {
-				$row[$langCol] = str_replace($find,$replace,$row[$langCol]); 
-			}
-		}
-		$csv->data[$i] = $row;
-	}
-	
+            var_dump('processing',$prefix);
+            
+            $csv = new parseCSV();
+            $csv->auto($csvString);
+            
+	  list($csv,$allKeys,$useBase,$hasBase,$validLanguages,$validLanguageColumns,$firstLanguage,$keyColumn,$formatsColumn,$commentsColumn) = reformatCSV($csv,$prefix,$prefixes);
+          
 	
 	$validLanguages = join(',',$validLanguages);	
-	$filePath = '/tmp/googlesheet2localozablestrings.working';
+	$filePath = '/tmp/googlesheet2localozablestrings'.$prefix.'.working';
 	$file = fopen($filePath,"w");
 	fputcsv($file,$csv->titles);
 	foreach ($csv->data as $row) {
-	  fputcsv($file,$row);
+            if ($row) {
+                      fputcsv($file,$row);
+            }
 	}
 	fclose($file);
 	
 	$sourceRoot = SOURCE_ROOT;
 	
 	$type  = '';
+          $output_basename = '';
 	switch (OUTPUT_TYPE) {
 		case 'android':
 			$type = 'csv2android';
@@ -234,14 +127,21 @@ try {
 		default:
 		case 'ios':
 			$type = 'csv2strings';
+                               if ($prefix) {
+                                  $output_basename = ' --output_basenames='.$prefix.'';
+                               }
 			break;
 	}
 	
 	putenv("LANG=en_US.UTF-8");
 	putenv("LANGUAGE=en_US.UTF-8");
 	putenv("LC_ALL=en_US.UTF-8");
-
-	`babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir="$sourceRoot"`;
+	
+	// added source here to allow for rvm usage
+///bin/bash --login; source ~/.bashrc; rvm 2.3.0-p0 exec
+    $command = " babelish $type --keys-column=$keyColumn --comments-column=$commentsColumn --filename=$filePath --langs=$validLanguages --output-dir=\"$sourceRoot\"$output_basename";
+	var_dump($command);
+        `$command`;
 	
 	
 	switch (OUTPUT_TYPE) {
@@ -300,7 +200,7 @@ try {
 				break;
 		}
 
-	
+	}
 	if (`which osascript`) {
 		$outputType = OUTPUT_TYPE;
 		`osascript -e 'display notification "Created $outputType Localized Strings for $sourceRoot"'`;
@@ -312,6 +212,155 @@ try {
 } 
 
 // Functions
+
+
+function reformatCSV($csv,$prefix=false,&$prefixes=null) {
+        
+        if (($prefixKey = array_search($prefix,$prefixes)) !== false) {
+            unset($prefixes[$prefixKey]);
+        }
+        
+        // remove the instructions line.
+        array_shift($csv->data);
+        
+        // assumption columns matching language codes as headers are valid.
+        $validLocaleCodes = array_keys(validLocales());
+        $useBase = file_exists(SOURCE_ROOT.'/Base.lproj');
+        $hasBase = false;
+        $validLanguages = [];
+        $validLanguageColumns = [];
+        $firstLanguage = false;
+        $keyColumn = -1;
+        $formatsColumn = -1;
+        $commentsColumn = -1;
+        
+        for( $i=0 ; $i < count($csv->titles) ; $i++) {
+            $code = trim($csv->titles[$i]);
+            if (in_array($code,$validLocaleCodes)) {
+                $in = $code;
+                $out = $code;
+                if ($useBase && !$hasBase) {
+                    $hasBase = true;
+                    $out = 'Base';
+                }
+                if (!$firstLanguage) {
+                    $firstLanguage = $out;
+                }
+                $validLanguages[] = "$in:$out";
+                $validLanguageColumns[] = $csv->titles[$i];
+            } else {
+                switch (strtolower($code)) {
+                    case 'key':
+                        $keyColumn = $i;
+                    break;
+                    case 'formats':
+                        $formatsColumn = $i;
+                    break;
+                    case 'description':
+                        $commentsColumn = $i;
+                    break;
+                }
+            }
+        }
+                
+        // apply formatting and gather keys
+        $allKeys = [];
+        for( $i=0 ; $i < count($csv->data) ; $i++) {
+            $row = array_change_key_case ($csv->data[$i] ,CASE_LOWER);
+        
+            // grab the key and check if it's in another file.
+            if (stristr($row['key'],':') !== false) {
+                list($rowPrefix,$rowKey) = explode(':',$row['key']);
+                if ($rowPrefix != $prefix) {
+                    $csv->data[$i] = null;
+                    if (!in_array($rowPrefix, $prefixes)) {
+                        $prefixes[] = $rowPrefix; 
+                    }
+                    continue;
+                } else {
+                    $row['key'] = $rowKey;
+                }
+            } else if ($prefix) {
+                $csv->data[$i] = null;
+                continue;
+            }
+        
+            switch (@$row['parser']) {
+                case 'plain':
+                
+                break;
+                case 'html':
+                
+                break;
+                case 'markdown':
+                
+                break;
+                default:
+                    break;
+            }
+            
+            // Escape content only
+            foreach($validLanguageColumns as $langCol) {
+                switch (OUTPUT_TYPE) {
+                    case 'android':
+                        $row[$langCol] = str_replace('%','\\u0025',$row[$langCol]);
+                        $row[$langCol] = str_replace('&','&amp;',$row[$langCol]);
+                        $row[$langCol] = str_replace('\"','\\\'',$row[$langCol]);
+                        $row[$langCol] = str_replace('\'','\\\'',$row[$langCol]);
+                        if (@$row['parser'] == 'html' || (@!$row['parser'] && ($row[$langCol] && trim($row[$langCol][0]) == '<'))) {
+                            $row[$langCol] = '<![CDATA['.$row[$langCol].']]>';
+                        }
+                    break;
+                    case 'ios':
+                        $row[$langCol] = str_replace('%','%%',$row[$langCol]);
+                    break;
+                    default:
+                        break;
+                }
+                //echo "{$row[$langCol]}\n";
+            }
+            $csv->data[$i] = $row;
+
+            
+            $formats = trim(@$row['formats']);
+            if (!$formats) continue;
+
+            $allKeys[] = $row['key'];
+            
+            $formatPairs = explode(';', $formats);
+            foreach($formatPairs as $pair) {
+	if(!$pair) {
+		continue;
+	}
+                list($find,$replace) = explode('=',$pair);
+                $find = trim($find);
+                $replace = explode('|',$replace);
+                switch (OUTPUT_TYPE) {
+                    case 'android':
+                        $replace = $replace[1];
+                    break;
+                    case 'php':
+                        $replace = $replace[3];
+                    break;
+                    case 'json':
+                        $replace = $replace[2];
+                    break;
+                    default:
+                    case 'ios':
+                        $replace = $replace[0];
+                        break;
+                }
+                foreach($validLanguageColumns as $langCol) {
+                    $row[$langCol] = str_replace($find,$replace,$row[$langCol]); 
+                }
+            }
+            $csv->data[$i] = $row;
+        }
+        
+        return [$csv,$allKeys,$useBase,$hasBase,$validLanguages,$validLanguageColumns,$firstLanguage,$keyColumn,$formatsColumn,$commentsColumn];
+                
+}
+
 
 function downloadCSV($service, $file) {
    $downloadUrl = $file->getExportLinks()['text/csv'];
