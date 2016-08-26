@@ -375,22 +375,25 @@ function reformatCSV($csv,$prefix=false,&$prefixes=null) {
 
 
 function downloadCSV($service, $file) {
-   $downloadUrl = $file->getExportLinks()['text/csv'];
-  if ($downloadUrl) {
-    $request = new Google_Http_Request($downloadUrl, 'GET', null, null);
-    $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-    if ($httpRequest->getResponseHttpCode() == 200) {
-      return $httpRequest->getResponseBody();
-    } else {
-      // An error occurred.
-		die("\nHTTP error.\n");
-      return null;
-    }
-  } else {
-    // The file doesn't have any content stored on Drive.
-	die("\nno content in file.\n");
-    return null;
-  }
+//   $downloadUrl = $file->getExportLinks()['text/csv'];
+//  if ($downloadUrl) {
+//    $request = new Google_Http_Request($downloadUrl, 'GET', null, null);
+//    $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+//    if ($httpRequest->getResponseHttpCode() == 200) {
+//      return $httpRequest->getResponseBody();
+//    } else {
+//      // An error occurred.
+//		die("\nHTTP error.\n");
+//      return null;
+//    }
+//  } else {
+//    // The file doesn't have any content stored on Drive.
+//	die("\nno content in file.\n");
+//    return null;
+//  }
+$content = $service->files->export($file->id, 'text/csv', array('alt' => 'media' ));
+return $content;
+
 }
 
 function validLocales() {

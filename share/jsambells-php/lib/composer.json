@@ -17,6 +17,7 @@
 		"rossedman/teamwork": "~1.0",
 		"phpoffice/phpword": "^0.12.1",
 		"parsecsv/php-parsecsv": "^0.4.5",
-		"asimlqt/php-google-spreadsheet-client": "^2.3"
+		"asimlqt/php-google-spreadsheet-client": "^2.3",
+		"google/apiclient-services": "dev-master"
     }
 }

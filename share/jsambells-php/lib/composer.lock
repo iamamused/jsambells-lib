@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6984568d053e7c0eb3bd384119203361",
-    "content-hash": "5e297c59c819c159c149d6483c320d95",
+    "hash": "be41779951f713d70f7ae96e95dc9326",
+    "content-hash": "35c246468a4e591695ce9ddf91bd4e5a",
     "packages": [
         {
             "name": "asimlqt/php-google-spreadsheet-client",
@@ -60,16 +60,16 @@
         },
         {
             "name": "google/apiclient",
-            "version": "1.1.6",
+            "version": "v1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "a25dc9d5c109ebb02945ba1ff6336cc937c27628"
+                "reference": "85309a3520bb5f53368d43e35fd24f43c9556323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/a25dc9d5c109ebb02945ba1ff6336cc937c27628",
-                "reference": "a25dc9d5c109ebb02945ba1ff6336cc937c27628",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/85309a3520bb5f53368d43e35fd24f43c9556323",
+                "reference": "85309a3520bb5f53368d43e35fd24f43c9556323",
                 "shasum": ""
             },
             "require": {
@@ -82,12 +82,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-v1-master": "1.1.x-dev"
                 }
             },
             "autoload": {
-                "classmap": [
-                    "src/"
+                "files": [
+                    "src/Google/autoload.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -99,21 +99,55 @@
             "keywords": [
                 "google"
             ],
-            "time": "2015-10-16 22:11:08"
+            "time": "2016-06-06 21:22:48"
+        },
+        {
+            "name": "google/apiclient-services",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/google-api-php-client-services.git",
+                "reference": "69494a202d0422b5533c97f7025861f48e02d35f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/69494a202d0422b5533c97f7025861f48e02d35f",
+                "reference": "69494a202d0422b5533c97f7025861f48e02d35f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Google_Service_": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Client library for Google APIs",
+            "homepage": "http://developers.google.com/api-client-library/php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2016-08-04 00:00:53"
         },
         {
             "name": "gorkalaucirica/hipchat-v2-api-client",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "target-dir": "GorkaLaucirica/HipchatAPIv2Client",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gorkalaucirica/HipchatAPIv2Client.git",
-                "reference": "30ebdd77cca56e18afa41491eb62616486e076d2"
+                "reference": "045521cd01aba26cdf304010bc3f66dc4f9fd37c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gorkalaucirica/HipchatAPIv2Client/zipball/30ebdd77cca56e18afa41491eb62616486e076d2",
-                "reference": "30ebdd77cca56e18afa41491eb62616486e076d2",
+                "url": "https://api.github.com/repos/gorkalaucirica/HipchatAPIv2Client/zipball/045521cd01aba26cdf304010bc3f66dc4f9fd37c",
+                "reference": "045521cd01aba26cdf304010bc3f66dc4f9fd37c",
                 "shasum": ""
             },
             "require": {
@@ -150,20 +184,20 @@
                 "library",
                 "v2"
             ],
-            "time": "2015-10-08 21:36:23"
+            "time": "2016-04-30 11:45:31"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "f3c8c22471cb55475105c14769644a49c3262b93"
+                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f3c8c22471cb55475105c14769644a49c3262b93",
-                "reference": "f3c8c22471cb55475105c14769644a49c3262b93",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/70f1fa53b71c4647bf2762c09068a95f77e12fb8",
+                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8",
                 "shasum": ""
             },
             "require": {
@@ -172,15 +206,9 @@
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0",
-                "psr/log": "^1.0"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\": "src/"
@@ -208,7 +236,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-05-20 03:47:55"
+            "time": "2016-07-15 19:28:39"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -412,16 +440,16 @@
         },
         {
             "name": "nepda/youtrack-client",
-            "version": "v1.0.9",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nepda/youtrack.git",
-                "reference": "650e8bd73d70b11a20673b4ea9cf27e3798ab273"
+                "reference": "60030b5b694eb4a34e2158e364ed88c2c15a77e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nepda/youtrack/zipball/650e8bd73d70b11a20673b4ea9cf27e3798ab273",
-                "reference": "650e8bd73d70b11a20673b4ea9cf27e3798ab273",
+                "url": "https://api.github.com/repos/nepda/youtrack/zipball/60030b5b694eb4a34e2158e364ed88c2c15a77e1",
+                "reference": "60030b5b694eb4a34e2158e364ed88c2c15a77e1",
                 "shasum": ""
             },
             "require": {
@@ -450,10 +478,14 @@
                 {
                     "name": "Nepomuk Fraedrich",
                     "email": "info@nepda.eu"
+                },
+                {
+                    "name": "Sergey Susikov",
+                    "email": "sergey.susikov@coldbrainweb.com"
                 }
             ],
             "description": "A PHP YouTrack client library",
-            "time": "2015-02-10 10:04:24"
+            "time": "2016-08-11 09:49:44"
         },
         {
             "name": "parsecsv/php-parsecsv",
@@ -646,16 +678,16 @@
         },
         {
             "name": "react/promise",
-            "version": "v2.2.1",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "3b6fca09c7d56321057fa8867c8dbe1abf648627"
+                "reference": "8025426794f1944de806618671d4fa476dc7626f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/3b6fca09c7d56321057fa8867c8dbe1abf648627",
-                "reference": "3b6fca09c7d56321057fa8867c8dbe1abf648627",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/8025426794f1944de806618671d4fa476dc7626f",
+                "reference": "8025426794f1944de806618671d4fa476dc7626f",
                 "shasum": ""
             },
             "require": {
@@ -686,20 +718,20 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2015-07-03 13:48:55"
+            "time": "2016-05-03 17:50:52"
         },
         {
             "name": "rossedman/teamwork",
-            "version": "v1.0.3",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossedman/teamwork.git",
-                "reference": "d6262befe89d2d4f7628ca5db1a1618ffc3acad1"
+                "reference": "d56e9d9cb939e182f26f975391f2405faa903ecc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossedman/teamwork/zipball/d6262befe89d2d4f7628ca5db1a1618ffc3acad1",
-                "reference": "d6262befe89d2d4f7628ca5db1a1618ffc3acad1",
+                "url": "https://api.github.com/repos/rossedman/teamwork/zipball/d56e9d9cb939e182f26f975391f2405faa903ecc",
+                "reference": "d56e9d9cb939e182f26f975391f2405faa903ecc",
                 "shasum": ""
             },
             "require": {
@@ -736,20 +768,20 @@
                 "project management",
                 "teamwork"
             ],
-            "time": "2015-11-18 22:05:44"
+            "time": "2016-04-12 17:35:06"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.2",
+            "version": "v2.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "34c8a4b51e751e7ea869b8262f883d008a2b81b8"
+                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/34c8a4b51e751e7ea869b8262f883d008a2b81b8",
-                "reference": "34c8a4b51e751e7ea869b8262f883d008a2b81b8",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
+                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
                 "shasum": ""
             },
             "require": {
@@ -785,7 +817,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-13 10:28:07"
+            "time": "2016-07-17 09:06:15"
         },
         {
             "name": "tinyrocket/toggl",
@@ -833,7 +865,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "tinyrocket/toggl": 20
+        "tinyrocket/toggl": 20,
+        "google/apiclient-services": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
