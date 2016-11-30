@@ -103,7 +103,6 @@ try {
 
         list($csv, $allKeys, $useBase, $hasBase, $validLanguages, $validLanguageColumns, $firstLanguage, $keyColumn, $formatsColumn, $commentsColumn) = reformatCSV($csv, $prefix, $prefixes);
 
-
         foreach ($validLanguages as $lang) {
 
             $filePath = '/tmp/googlesheet2localozablestrings' . $prefix . '.working';
@@ -192,6 +191,8 @@ try {
 //die();
                 // generate constants
                 foreach ($allKeys as $key) {
+                    if (!$key) continue;
+                    
                     // .h FOUNDATION_EXPORT NSString *const kUserProfileCategories;
                     // .m NSString *const kUserProfileCategories = @"kUserProfileCategories";
 
@@ -271,7 +272,6 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
     }
 
     // apply formatting and gather keys
-    $allKeys = [];
     for ($i = 0; $i < count($csv->data); $i++) {
         $row = array_change_key_case($csv->data[$i], CASE_LOWER);
 
@@ -343,8 +343,6 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
         $formats = trim(@$row['formats']);
         if (!$formats) continue;
 
-        $allKeys[] = $row['key'];
-
         $formatPairs = explode(';', $formats);
         foreach ($formatPairs as $pair) {
             if (!$pair) {
@@ -375,6 +373,11 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
         $csv->data[$i] = $row;
     }
 
+    $allKeys= array();
+    foreach ($csv->data as $item) {
+        $allKeys[] = $item['key'];
+    }
+        
     return [$csv, $allKeys, $useBase, $hasBase, $validLanguages, $validLanguageColumns, $firstLanguage, $keyColumn, $formatsColumn, $commentsColumn];
 
 }
