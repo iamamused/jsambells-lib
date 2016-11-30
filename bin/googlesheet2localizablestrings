@@ -192,7 +192,9 @@ try {
                 // generate constants
                 foreach ($allKeys as $key) {
                     if (!$key) continue;
+                    if (stristr($key,':') !== false) continue;
                     
+                    $key = preg_replace('/[^A-Za-z0-9_-]/', '', $key);
                     // .h FOUNDATION_EXPORT NSString *const kUserProfileCategories;
                     // .m NSString *const kUserProfileCategories = @"kUserProfileCategories";
 
@@ -200,8 +202,8 @@ try {
                     $hFile .= "FOUNDATION_EXPORT NSString *const kLoc{$camel};\n";
                     $mFile .= "NSString *const kLoc{$camel} = @\"$key\";\n";
                 }
-                file_put_contents($sourceRoot . '/GSLocalizationConstants.h', $hFile);
-                file_put_contents($sourceRoot . '/GSLocalizationConstants.m', $mFile);
+                file_put_contents($sourceRoot . '/GSLocalizationConstants'.ucfirst($prefix).'.h', $hFile);
+                file_put_contents($sourceRoot . '/GSLocalizationConstants'.ucfirst($prefix).'.m', $mFile);
                 break;
             default:
                 break;
