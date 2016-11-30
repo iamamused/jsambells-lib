@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+echo `ruby -v`;
 
 echo "php_sapi_name: " . php_sapi_name() . "\n";
 
@@ -26,10 +27,12 @@ putenv("GOOGLE_APPLICATION_CREDENTIALS=" . $credentials);
 
 // Setup libraries
 
-if (file_exists('../share/jsambells-php/lib')) {
-    define('LIBRARY_INCLUDE_PATH', realpath('../share/jsambells-php/lib'));
-} else {
+if (file_exists(dirname(__FILE__).'/../share/jsambells-php/lib')) {
+    define('LIBRARY_INCLUDE_PATH', realpath(dirname(__FILE__).'/../share/jsambells-php/lib'));
+} else if (file_exists('/usr/local/share/jsambells-php/lib')) {
     define('LIBRARY_INCLUDE_PATH', '/usr/local/share/jsambells-php/lib');
+} else {
+    die('missing /usr/local/share/jsambells-php/lib');
 }
 
 require_once LIBRARY_INCLUDE_PATH . '/vendor/autoload.php';
@@ -141,8 +144,6 @@ try {
             putenv("LANGUAGE=en_US.UTF-8");
             putenv("LC_ALL=en_US.UTF-8");
 
-            // added source here to allow for rvm usage
-           // /bin/bash --login; source ~/.bashrc; rvm 2.3.0-p0 exec
             $command = " babelish $type --keys-column=\"$keyColumn\" --comments-column=\"$commentsColumn\" --filename=\"$filePath\" --langs=\"$lang\" --output-dir=\"$sourceRoot\"$output_basename";
             echo "Command: $ $command\n";
             echo `$command`;
@@ -328,7 +329,7 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
                     }
                     break;
                 case 'ios':
-                    $row[$langCol] = str_replace('%', '%%', $row[$langCol]);
+                    $row[$langCol] = str_replace('%@', '%%@', $row[$langCol]);
                     break;
                 default:
                     break;

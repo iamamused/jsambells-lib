@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "69494a202d0422b5533c97f7025861f48e02d35f"
+                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/69494a202d0422b5533c97f7025861f48e02d35f",
-                "reference": "69494a202d0422b5533c97f7025861f48e02d35f",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
+                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-08-04 00:00:53"
+            "time": "2016-10-18 01:01:16"
         },
         {
             "name": "gorkalaucirica/hipchat-v2-api-client",
@@ -389,16 +389,16 @@
         },
         {
             "name": "michelf/php-markdown",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "156e56ee036505ec637d761ee62dc425d807183c"
+                "reference": "1f51cc520948f66cd2af8cbc45a5ee175e774220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/156e56ee036505ec637d761ee62dc425d807183c",
-                "reference": "156e56ee036505ec637d761ee62dc425d807183c",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/1f51cc520948f66cd2af8cbc45a5ee175e774220",
+                "reference": "1f51cc520948f66cd2af8cbc45a5ee175e774220",
                 "shasum": ""
             },
             "require": {
@@ -436,20 +436,20 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2015-12-24 01:37:31"
+            "time": "2016-10-29 18:58:20"
         },
         {
             "name": "nepda/youtrack-client",
-            "version": "v1.4.2",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nepda/youtrack.git",
-                "reference": "60030b5b694eb4a34e2158e364ed88c2c15a77e1"
+                "reference": "0b3467294de3ce9d8143f7c9f4dbb7e8b5197861"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nepda/youtrack/zipball/60030b5b694eb4a34e2158e364ed88c2c15a77e1",
-                "reference": "60030b5b694eb4a34e2158e364ed88c2c15a77e1",
+                "url": "https://api.github.com/repos/nepda/youtrack/zipball/0b3467294de3ce9d8143f7c9f4dbb7e8b5197861",
+                "reference": "0b3467294de3ce9d8143f7c9f4dbb7e8b5197861",
                 "shasum": ""
             },
             "require": {
@@ -485,7 +485,7 @@
                 }
             ],
             "description": "A PHP YouTrack client library",
-            "time": "2016-08-11 09:49:44"
+            "time": "2016-10-03 06:22:13"
         },
         {
             "name": "parsecsv/php-parsecsv",
@@ -772,16 +772,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.9",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d"
+                "reference": "396784cd06b91f3db576f248f2402d547a077787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
-                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/396784cd06b91f3db576f248f2402d547a077787",
+                "reference": "396784cd06b91f3db576f248f2402d547a077787",
                 "shasum": ""
             },
             "require": {
@@ -817,7 +817,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17 09:06:15"
+            "time": "2016-10-21 20:59:10"
         },
         {
             "name": "tinyrocket/toggl",
