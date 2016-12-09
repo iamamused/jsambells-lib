@@ -93,10 +93,15 @@ try {
 
 
     $prefixes = [false];
-
+    $processedPrefixes = [];
     while (list($k, $prefix) = each($prefixes)) {
 
+        if ($prefix && in_array($prefix, $processedPrefixes)) {
+            continue;
+        }
+
         echo "Processing Prefix: '$prefix'\n";
+        $processedPrefixes[] = $prefix;
 
         $csv = new parseCSV();
         $csv->auto($csvString);
@@ -376,7 +381,14 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
     }
 
     $allKeys= array();
-    foreach ($csv->data as $item) {
+    foreach ($csv->data as $ik=>$item) {
+        if (!$item['key']) {
+            continue;
+        }
+        if (stristr($item['key'],':') !== false) {
+            unset($csv->data[$ik]);
+            continue;
+        }
         $allKeys[] = $item['key'];
     }
         
