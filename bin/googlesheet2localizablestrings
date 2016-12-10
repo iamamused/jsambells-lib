@@ -287,6 +287,10 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
             switch (OUTPUT_TYPE) {
                 default:
                     $rowKey = substr($row['key'], strpos($row['key'], ':') + 1);
+                    $rowKeyPrefix = substr($row['key'],  0, strpos($row['key'], ':')); 
+                    if ($rowKeyPrefix && 0 !== stripos($rowKey, $rowKeyPrefix)) {
+                        $rowKey = strtolower($rowKeyPrefix).'_'.$rowKey;
+                    }
                     $row['key'] = $rowKey;
                     break;
                 case 'ios':
@@ -386,10 +390,17 @@ function reformatCSV($csv, $prefix = false, &$prefixes = null)
             continue;
         }
         if (stristr($item['key'],':') !== false) {
+            // Filter out the other prefixed keys.
             unset($csv->data[$ik]);
             continue;
         }
-        $allKeys[] = $item['key'];
+        
+        // prefix all the keys with the prefix
+        if ($prefix && 0 !== stripos($item['key'], $prefix)) {
+            $csv->data[$ik]['key'] = strtolower($prefix).'_'.$csv->data[$ik]['key'];
+        }
+        
+        $allKeys[] = $csv->data[$ik]['key'];
     }
         
     return [$csv, $allKeys, $useBase, $hasBase, $validLanguages, $validLanguageColumns, $firstLanguage, $keyColumn, $formatsColumn, $commentsColumn];
