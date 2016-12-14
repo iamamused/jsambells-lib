@@ -207,6 +207,27 @@ try {
                     $hFile .= "FOUNDATION_EXPORT NSString *const kLoc{$camel};\n";
                     $mFile .= "NSString *const kLoc{$camel} = @\"$key\";\n";
                 }
+                
+                $mFile .= "\n\n//Qucik find/replace helpers: \n// ";
+
+                foreach ($allKeys as $key) {
+                    if (!$key) continue;
+                    if (stristr($key,':') !== false) continue;
+                    
+                    $camel = preg_replace('/[^A-Za-z0-9_-]/', '', $key);
+                    $camel = ucfirst(Google_Utils::camelCase($camel));
+                    // http://unix.stackexchange.com/questions/112023/how-can-i-replace-a-string-in-a-files
+                    
+                    $mFile .= "find . -type f -iname \"*.m\" ! -iname \"*GSLocalizationConstants*\" -exec sed -i '' 's/@\"$key\"/kLoc$camel/g' {} +;";
+
+                    //$mFile .= "//find . -regex \".*\.\(m\)\" | perl -pi -w -e 's/@\"$key\"/kLoc$camel/g;' *.m;";
+                
+                }
+                
+                
+                
+                
+                
                 file_put_contents($sourceRoot . '/GSLocalizationConstants'.ucfirst($prefix).'.h', $hFile);
                 file_put_contents($sourceRoot . '/GSLocalizationConstants'.ucfirst($prefix).'.m', $mFile);
                 break;
