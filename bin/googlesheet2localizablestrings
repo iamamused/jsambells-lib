@@ -242,11 +242,11 @@ try {
  */
 ';
 
-                $swiftFile .= "\nfunc GSLocalizedString(_ key: GSLocalizedStringConstants) -> String {";
+                $swiftFile .= "\nfunc LocalizedString(_ key: LocalizedStringConstants) -> String {";
                 $swiftFile .= "\n\treturn NSLocalizedString(key.rawValue, comment: \"\")";
                 $swiftFile .= "\n}";
 
-                $swiftFile .= "\n\nenum GSLocalizedStringConstants: String {\n";
+                $swiftFile .= "\n\nenum LocalizedStringConstants: String {\n";
                 
                 // generate constants
                 foreach ($allKeys as $key) {
@@ -262,7 +262,7 @@ try {
                 }
 
                 $swiftFile .= '}';
-                file_put_contents($sourceRoot . '/GSLocalizationConstants'.ucfirst($prefix).'.swift', $swiftFile);
+                file_put_contents($sourceRoot . '/LocalizationConstants'.ucfirst($prefix).'.swift', $swiftFile);
                 break;
             default:
                 break;
