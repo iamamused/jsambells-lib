@@ -241,14 +241,22 @@ try {
  * @see https://github.com/iamamused/libjsambells/blob/master/bin/googlesheet2localizablestrings
  */
  
-import Foundation
-';
+import Foundation';
 
+                $swiftFile .= "\n\n/**";
+                $swiftFile .= "\n * This method is a convenience wrapper around NSLocalizedString method using the";
+                $swiftFile .= "\n * LocalizedStringConstants which is generated off the Localizable.strings file keys";
+                $swiftFile .= "\n *";
+                $swiftFile .= "\n * @param key -> The LocalizedStringConstants value to look for";
+                $swiftFile .= "\n */";
                 $swiftFile .= "\nfunc LocalizedString(_ key: LocalizedStringConstants) -> String {";
                 $swiftFile .= "\n\treturn NSLocalizedString(key.rawValue, comment: \"\")";
                 $swiftFile .= "\n}";
 
-                $swiftFile .= "\n\nenum LocalizedStringConstants: String {\n";
+                $swiftFile .= "\n\n/**";
+                $swiftFile .= "\n * Enum of the available keys in the Localizable.strings file";
+                $swiftFile .= "\n */";
+                $swiftFile .= "\nenum LocalizedStringConstants: String {\n";
                 
                 // generate constants
                 foreach ($allKeys as $key) {
